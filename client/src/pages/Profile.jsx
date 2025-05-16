@@ -37,6 +37,10 @@ const Profile = () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete your profile?"
     );
+    if(!confirmDelete){
+      setspinner(false)
+      return;
+    }
     if (confirmDelete) {
       try {
         const response = await deleteProfile(id);

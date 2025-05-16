@@ -26,6 +26,7 @@ exports.book = async(req , res)=>{
 }
 
 exports.upload = async (req, res) => {
+  console.log(req.body)
   const userid = req.params.userid || req.query.userid;
   const { title, author, description, stock, price, category , discount} = req.body;
 
@@ -47,6 +48,7 @@ exports.upload = async (req, res) => {
   }
 
   try {
+    console.log(req.body)
     if (!req.files || !req.files.image || !req.files.preview) {
       return res
         .status(400)

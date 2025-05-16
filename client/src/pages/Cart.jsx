@@ -89,7 +89,7 @@ const Cart = () => {
       <div className="w-full min-h-screen bg-gradient-to-r from-[#1a1a1a] to-[#2b2b2b] text-white px-6 py-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold underline decoration-[#fbbf24] decoration-4 underline-offset-4 mb-8">
-            Your Shopping Cart
+            Your Shopping Cart  
           </h1>
           {cartItems && cartItems.length > 0 ? (
             <button
@@ -102,7 +102,7 @@ const Cart = () => {
             </button>
           ) : null}
         </div>
-        {cartItems && cartItems.length === 0 ? (
+        {cartItems && cartItems.length === 0 || cartItems === undefined? (
           <p className="text-center text-gray-400">Your cart is empty.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -111,6 +111,9 @@ const Cart = () => {
                 <div
                   key={item.bookid._id}
                   className="bg-[#3a3a3a]/80 rounded-lg shadow-lg overflow-hidden hover:shadow-yellow-400/20 transition duration-300"
+                  onClick={()=>{
+                    navigate("/Review" ,{ state : {id :item.bookid._id}})
+                  }}
                 >
                   <img
                     src={item.bookid.coverimage.url}
@@ -171,14 +174,14 @@ const Cart = () => {
                     </div>
                     <div className="flex justify-between">
                       <button
-                        className="w-30% bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition duration-300"
+                        className="w-30% bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition duration-300 z-50"
                         onClick={() => handleorder(item)}
                       >
                         Buy Now
                       </button>
 
                       <button
-                        className="w-[50%] bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition duration-300"
+                        className="w-[50%] bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition duration-300 z-50"
                         onClick={() => handleRemoveFromCart(item.bookid._id)}
                       >
                         Remove from Cart

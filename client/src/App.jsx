@@ -9,6 +9,8 @@ import History from './pages/History';
 import Market from './pages/Market';
 import Update from './pages/Update';
 import Books from './pages/Books';
+import Upload from './pages/Upload';
+import Review from './pages/Review';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App = () => {
@@ -25,6 +27,8 @@ const App = () => {
         <Route path="/Market" element={<Market />} />
         <Route path="/Update" element={<Update />} />
         <Route path="/Books" element={<Books />} />
+        <Route path="/Upload" element={<Upload />} />
+        <Route path="/Review" element={<Review />} />
       </Routes>
     </Router>
   );

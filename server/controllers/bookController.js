@@ -5,14 +5,8 @@ function sanitizeName(name) {
   return name.replace(/\s+/g, "").replace(/[^a-zA-Z0-9]/g, "");
 }
 
-
 exports.getAllbooks = async (req, res) => {
-  const {
-    page = 1,
-    limit = 10,
-    search = "",
-    category = "",
-  } = req.query;
+  const { page = 1, limit = 10, search = "", category = "" } = req.query;
 
   const query = {};
 
@@ -25,7 +19,9 @@ exports.getAllbooks = async (req, res) => {
 
   if (category) {
     const categoryArray = category.split(",").map((c) => c.trim());
-    query.category = { $in: categoryArray };
+    query.category = {
+      $in: categoryArray.map((c) => new RegExp(`^${c}$`, "i")),
+    };
   }
   try {
     const book = await bookSchema
@@ -49,16 +45,24 @@ exports.getAllbooks = async (req, res) => {
 
 exports.getbyId = async (req, res) => {
   const bookid = req.params.bookid || req.query.bookid;
-  console.log(bookid);
 
   if (!bookid) {
     return res.status(400).json({ message: "id required for book" });
   }
   try {
-    const response = await bookSchema.findById(bookid);
+    const response = await bookSchema
+      .findById(bookid)
+      .select("-createdAt -stock -updatedAt")
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "Userid",
+          select: "name",
+        },
+      });
     return res.status(200).json({ message: "OK", data: response });
   } catch (error) {
-    return res.status(400).json({ message: "something is wrong" });
+    return res.status(400).json({ message: error.message });
   }
 };
 
@@ -68,7 +72,7 @@ exports.addreview = async (req, res) => {
   const { rating, comment } = req.body;
 
   if (!Userid || !rating) {
-    return res.status(300).json({ message: "userId or rating is required" });
+    return res.status(400).json({ message: "userId or rating is required" });
   }
 
   try {
@@ -96,8 +100,10 @@ exports.deletereview = async (req, res) => {
     const bookid = req.params.bookid || req.query.bookid;
     const reviewid = req.params.reviewid || req.query.reviewid;
 
-    if(!bookid || !reviewid){
-      return res.status(300).json({message :"bookid and review id is required"})
+    if (!bookid || !reviewid) {
+      return res
+        .status(400)
+        .json({ message: "bookid and review id is required" });
     }
 
     const book = await bookSchema.findById(bookid);
@@ -123,10 +129,9 @@ exports.deletereview = async (req, res) => {
 };
 
 exports.gettopratedbooks = async (req, res) => {
+  const { search = "", category = "" } = req.query;
 
-  const{ search = "" , category = ""} = req.query
-  
-  const query ={}
+  const query = {};
 
   if (search) {
     query.$or = [
@@ -140,21 +145,17 @@ exports.gettopratedbooks = async (req, res) => {
     query.category = { $in: categoryArray };
   }
 
-  try{
-    const book = await bookSchema.find(query)
-    .sort({rating : -1})
-    .limit(10)
+  try {
+    const book = await bookSchema.find(query).sort({ rating: -1 }).limit(10);
 
-    const total = await bookSchema.countDocuments(query)
+    const total = await bookSchema.countDocuments(query);
     return res.status(200).json({
-      message : "ok",
-      total : total,
-      data : book
-    })
-
-  }catch(error){
-    console.log(error)
-    return res.status(300).json({message : "error" , error : error})
+      message: "ok",
+      total: total,
+      data: book,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(300).json({ message: "error", error: error });
   }
-
 };

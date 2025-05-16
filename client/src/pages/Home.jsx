@@ -36,7 +36,7 @@ const Home = () => {
   };
 
   const handlecategory = (category) => {
-    navigate(`/Market` , {state: {category: category.toLowerCase()}});
+    navigate(`/Market` , {state: {category: category}});
   }
 
   const handleaddtocart= async(book)=>{

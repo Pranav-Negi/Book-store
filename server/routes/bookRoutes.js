@@ -6,7 +6,7 @@ const { protect } = require("../middleware/userMiddleware")
 router.get("/get", protect , getAllbooks)
 router.get("/getone", protect , getbyId)
 router.put("/addreview" , protect,addreview )
-router.delete("/deletereview", protect , deletereview)
 router.get("/gettopratedbooks", protect , gettopratedbooks)
+router.delete("/deletereview", protect , deletereview)
 
 module.exports = router
