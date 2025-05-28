@@ -8,9 +8,11 @@ import Otp from "../components/Otp";
 import { sendOtp, verifyOtp } from "../api/Otp";
 import { getProfile, updateProfile } from "../api/Userapi";
 import Loader from "../components/Loader";
+import { useUser } from "../Context/UserContext";
 
 const Update = () => {
   const navigate = useNavigate();
+  const {userid} = useUser()
   const [otpsent, setOtpsent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [spinner , setspinner] = useState(false)
@@ -85,14 +87,13 @@ const Update = () => {
 
   const handleuser = async () => {
     setspinner(true)
-    const userId = localStorage.getItem("userid");
-    if (!userId) {
+    if (!userid) {
       alert("Please log in to view your profile.");
       return;
     }
 
     try {
-      const response = await getProfile(userId);
+      const response = await getProfile(userid);
       console.log(response);
       setFormData({
         name: response.data.name,

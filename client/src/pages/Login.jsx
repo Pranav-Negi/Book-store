@@ -6,6 +6,7 @@ import { useToast } from "../Context/Toast";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import Loader from "../components/Loader"
+import { useUser } from "../Context/UserContext";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { showToast } = useToast();
   const [spinner , setspinner] = useState(false)
+  const { setuserid} = useUser()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +28,7 @@ const Login = () => {
       const response = await login(formData);
       console.log("Login Response:", response);
       localStorage.setItem("token", response.token);
-      localStorage.setItem("userid", response.id);
+      setuserid(response.id)
       showToast("Login successful!", "success");
       navigate("/home");
     } catch (error) {

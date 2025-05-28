@@ -1,13 +1,14 @@
-import React from "react";
+
 import { useToast } from "../Context/Toast";
 import { addToCart } from "../api/Cart";
+import { useUser } from "../Context/UserContext";
 
 const Bookcard = ({ book }) => {
   const { showToast } = useToast();
+  const {userid} = useUser()
 
   const addCart = async (book) => {
-    const Userid = localStorage.getItem("userid");
-    if (!Userid) {
+    if (!userid) {
 
       alert("Please log in to add items to your cart.");
       return;
@@ -15,7 +16,7 @@ const Bookcard = ({ book }) => {
 
     const data ={
       bookid: book._id,
-      Userid: localStorage.getItem("userid"),
+      Userid: userid,
       price: book.price,
       quantity: 1,
     }

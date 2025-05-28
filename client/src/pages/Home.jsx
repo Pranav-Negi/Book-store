@@ -12,6 +12,7 @@ import { addToCart } from "../api/Cart";
 import { useToast } from "../Context/Toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader"
+import { useUser } from "../Context/UserContext";
 
 const Home = () => {
   const [spinner , setspinner] = useState(false)
@@ -19,6 +20,7 @@ const Home = () => {
   const swiperRef = useRef(null);
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { userid } = useUser()
 
   useEffect(() => {
       window.scrollTo({ top: 0, behavior: "smooth" }); 
@@ -40,16 +42,14 @@ const Home = () => {
   }
 
   const handleaddtocart= async(book)=>{
-      const Userid = localStorage.getItem("userid");
-        if (!Userid) {
-    
+        if (!userid) {
           alert("Please log in to add items to your cart.");
           return;
         }
     
         const data ={
           bookid: book._id,
-          Userid: localStorage.getItem("userid"),
+          Userid:userid,
           price: book.price,
           quantity: 1,
           discount:book.discount

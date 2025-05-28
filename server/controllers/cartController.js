@@ -54,7 +54,7 @@ exports.viewcart = async (req, res) => {
     const [cart] = await Promise.all([
       cartSchema
         .findOne({ Userid })
-        .populate("items.bookid" ,"coverimage title author description price category ratings gallery") // Only populate necessary fields
+        .populate("items.bookid" ,"coverimage title author description price category ratings gallery discount") // Only populate necessary fields
         .lean(),
          // Convert to plain JS object for better performance
       cartSchema.countDocuments({ Userid }),

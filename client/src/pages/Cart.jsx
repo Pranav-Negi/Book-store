@@ -4,12 +4,14 @@ import Navbar from "../components/Navbar";
 import { useToast } from "../Context/Toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader"
+import { useUser } from "../Context/UserContext";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [spinner , setspinner] = useState(false)
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const { userid} = useUser()
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -18,14 +20,13 @@ const Cart = () => {
 
   const fetchCartItems = async () => {
     setspinner(true)
-    const UserId = localStorage.getItem("userid");
-    if (!UserId) {
+    if (!userid) {
       alert("Please log in to view your cart.");
       return;
     }
 
     try {
-      const response = await getCart(UserId);
+      const response = await getCart(userid);
       console.log("Cart items:", response.data.items);
       setCartItems(response.data.items); // Assuming `items` is the array of books in the cart
       setspinner(false)
@@ -37,15 +38,14 @@ const Cart = () => {
 
   const handleRemoveFromCart = async (bookid) => {
     setspinner(true)
-    const UserId = localStorage.getItem("userid");
-    if (!UserId) {
+    if (!userid) {
       alert("Please log in to remove items from your cart.");
       return;
       setspinner(false)
     }
     
     try {
-      await removeFromCart(bookid, UserId);
+      await removeFromCart(bookid, userid);
       console.log("Book removed from cart:", bookid);
       showToast("Book removed from cart successfully!", "success");
       fetchCartItems(); // Refresh the cart items after removal
@@ -59,14 +59,13 @@ const Cart = () => {
 
   const handleclearCart = async () => {
     setspinner(true)
-    const Userid = localStorage.getItem("userid");
-    if (!Userid) {
+    if (!userid) {
       alert("Please log in to clear your cart.");
       setspinner(false)
       return;
     }
     try {
-      await clearCart(Userid);
+      await clearCart(userid);
       showToast("Cart cleared successfully!", "success");
       fetchCartItems(); // Refresh the cart items after clearing
       setspinner(false)
@@ -175,15 +174,17 @@ const Cart = () => {
                     <div className="flex justify-between">
                       <button
                         className="w-30% bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition duration-300 z-50"
-                        onClick={() => handleorder(item)}
+                        onClick={(e) =>{e.stopPropagation();
+                           handleorder(item)}}
                       >
                         Buy Now
                       </button>
 
                       <button
                         className="w-[50%] bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition duration-300 z-50"
-                        onClick={() => handleRemoveFromCart(item.bookid._id)}
-                      >
+                        onClick={(e) =>{e.stopPropagation(),
+                          handleRemoveFromCart(item.bookid._id)}}
+                      > 
                         Remove from Cart
                       </button>
                     </div>

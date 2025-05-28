@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Slider from "../components/Slider";
 import { addToOrder } from "../api/order";
 import { useToast } from "../Context/Toast";
 import Loader from "../components/Loader"
+import { useUser } from "../Context/UserContext";
 
 const Order = () => {
   const location = useLocation();
@@ -13,7 +14,8 @@ const Order = () => {
   const [previewData, setPreviewData] = useState([]);
   const { showToast } = useToast();
   const [spinner , setspinner] = useState(false)
-  console.log(book);
+  const {userid} = useUser()
+  console.log(location.state.book);
 
   const [formData, setFormData] = useState({
     bookid:  book.bookid?._id ?  book.bookid?._id : book._id ,
@@ -39,8 +41,7 @@ const Order = () => {
     console.log(formData);
     e.preventDefault();
     
-    const userId = localStorage.getItem("userid");
-    if (!userId) {
+    if (!userid) {
       alert("Please log in to place an order.");
       setspinner(false)
       return;
@@ -48,7 +49,7 @@ const Order = () => {
     
     if (formData.paymentMethod === "Cash on delivery") {
       try {
-        await addToOrder(userId, formData);
+        await addToOrder(userid, formData);
         console.log("Order submitted:", formData);
         showToast("Order placed successfully!", "success");
       } catch (error) {
@@ -121,7 +122,7 @@ const Order = () => {
             <p className="text-gray-300 mb-4">
               {book.description || book.bookid.description}
             </p>
-               {book.discount > 0 ? 
+               {book.discount > 0 || book.bookid.discount > 0? 
                 (
                       <>
                         <span className="text-gray-400 line-through mr-2">
@@ -129,7 +130,7 @@ const Order = () => {
                         </span>
               
                           <span className="text-white font-bold">
-                          ${(book.price * (1 - book.discount / 100)).toFixed(2)}
+                          ${(book.price * ((1 - book.discount / 100) || (1 - book.bookid.discount / 100)  )).toFixed(2)}
                         
                         </span>
                       </>

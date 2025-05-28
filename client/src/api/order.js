@@ -44,7 +44,8 @@ export const updateOrderToPaid = async (id) => {
 }
 
 export const cancelOrder = async (id) => {
-    const response = await Axios.patch("/order/cancelOrder", {
+    console.log(id)
+    const response = await Axios.patch("/order/cancelOrder",null, {
         params: { id }
     });
     return response.data;

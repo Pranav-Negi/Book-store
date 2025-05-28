@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { getmyorder } from "../api/order";
+import { getmyorder ,cancelOrder } from "../api/order";
 import Navbar from "../components/Navbar";
 import Loader from "../components/Loader"
+import { useUser } from "../Context/UserContext";
 
 const History = () => {
+  const { userid } = useUser()
   const [orders, setOrders] = useState([]);
   const [spinner , setspinner] = useState(false)
   useEffect(() => {
@@ -13,7 +15,6 @@ const History = () => {
   const getOrders = async () => {
     setspinner(true)
     try {
-      const userid = localStorage.getItem("userid");
       const response = await getmyorder(userid);
       setOrders(response.data);
       setspinner(false)
@@ -22,6 +23,18 @@ const History = () => {
       setspinner(false)
     }
   };
+
+  const handlecancel = async(id)=>{
+    const confirm = window.confirm("Are you sure want to cancel the order")
+    if(confirm){
+      try{
+        const response = await cancelOrder(id)
+        getOrders()
+      }catch(error){
+        console.log(error)
+      }
+    }
+  }
 
   return (
     <>
@@ -92,6 +105,14 @@ const History = () => {
                     </div>
                   ))}
                 </div>
+                {
+                  order.orderStatus === "Cancelled" || order.orderStatus ==="deleiverd" ?null:
+                  (
+                    <button  
+                    className="text-[1rem] bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition duration-300 my-2"
+                    onClick={()=>{handlecancel(order._id)}}>Cancel Order</button>
+                  )
+                  }
               </div>
 
               {/* Right Section - Order Info */}

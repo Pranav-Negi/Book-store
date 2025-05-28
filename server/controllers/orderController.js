@@ -150,8 +150,8 @@ exports.updateOrderToPaid = async (req, res) => {
  };
 
  exports.cancelOrder = async (req, res) => { 
-
-    const id =req.params.id || req.query.id
+   const id = req.params.id || req.query.id
+   console.log(req.params)
     if(!id){
       return res.status(400).json({message : "id required"})
     }

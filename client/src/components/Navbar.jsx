@@ -8,7 +8,6 @@ const Navbar = () => {
       return;
     }
     localStorage.removeItem("token");
-    localStorage.removeItem("userid");
   };
   return (
     <nav className="bg-gradient-to-r from-[#1e1e1e] to-[#2c2c2c] shadow-lg sticky top-0 z-50">

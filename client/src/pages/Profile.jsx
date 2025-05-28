@@ -4,8 +4,10 @@ import Navbar from "../components/Navbar";
 import { getProfile, deleteProfile } from "../api/Userapi";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
+import { useUser } from "../Context/UserContext";
 
 const Profile = () => {
+  const { userid} = useUser()
   const [user, setUser] = useState({});
   const [spinner, setspinner] = useState(false);
   const navigate = useNavigate();
@@ -15,15 +17,14 @@ const Profile = () => {
 
   const fetchUserProfile = async () => {
     setspinner(true);
-    const userId = localStorage.getItem("userid");
-    if (!userId) {
+    if (!userid) {
       alert("Please log in to view your profile.");
       setspinner(false);
       return;
     }
 
     try {
-      const response = await getProfile(userId);
+      const response = await getProfile(userid);
       setUser(response.data);
       setspinner(false);
     } catch (error) {
@@ -45,7 +46,6 @@ const Profile = () => {
       try {
         const response = await deleteProfile(id);
         alert("Profile deleted successfully");
-        localStorage.removeItem("userid");
         localStorage.removeItem("token");
         navigate("/");
         setspinner(false);

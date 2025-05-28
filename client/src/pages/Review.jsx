@@ -4,9 +4,10 @@ import { useLocation } from "react-router-dom";
 import { getBookbyid, addReview ,deleteReview} from "../api/Bookapi";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import Loader from "../components/Loader";
+import { useUser } from "../Context/UserContext";
 
 const Review = () => {
-  const userid = localStorage.getItem("userid");
+  const {userid} = useUser()
   const location = useLocation();
   const [spinner, setspinner] = useState(false);
   const id = useRef(location.state.id);

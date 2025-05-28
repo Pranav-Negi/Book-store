@@ -3,12 +3,12 @@ import Navbar from "../components/Navbar";
 import Loader from "../components/Loader";
 import { getbook } from "../api/Admin";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../Context/UserContext";
 
 const Books = () => {
-  const userid = localStorage.getItem("userid");
+  const { userid } = useUser()
   const [spinner, setspinner] = useState(false);
   const [books, setbook] = useState([]);
-  const [user, setuser] = useState([]);
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menu = useRef();
@@ -24,7 +24,6 @@ const Books = () => {
     }
     try {
       const response = await getbook(userid);
-      setuser(response.data);
       setbook(response.data.books);
     } catch (error) {
       console.log(error);

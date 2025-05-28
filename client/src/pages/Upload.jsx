@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../Context/Toast";
 import Loader from "../components/Loader";
 import { uploadbook } from "../api/Admin";
+import { useUser } from "../Context/UserContext";
 
 const Upload = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const Upload = () => {
   setspinner(true);
 
   try {
-    const userid = localStorage.getItem("userid");
+    const {userid} = useUser()
     if (!userid) {
       alert("Please login");
       return;
