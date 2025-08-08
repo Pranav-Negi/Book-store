@@ -20,6 +20,3 @@ A MERN-stack (MongoDB, Express, React, Node.js) web application for managing and
 | Authentication | JSON Web Tokens (JWT), bcrypt for password hashing |
 | Image Storage | Cloudinary |
 | Frontend    | React.js, React Router, Styled Components / Tailwind CSS |
-| Deployment  | (e.g., Heroku / Netlify / Vercel / Docker) |
-   git clone https://github.com/Pranav-Negi/Book-store.git
-   cd Book-store
